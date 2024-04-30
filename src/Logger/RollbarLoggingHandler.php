@@ -1,13 +1,12 @@
 <?php
 
-declare(strict_types=1);
-
 namespace SimpleSAML\Module\rollbar\Logger;
 
 use Rollbar\Payload\Level as RollbarLogLevel;
 use Rollbar\Rollbar;
 use SimpleSAML\Configuration;
 use SimpleSAML\Logger;
+use SimpleSAML\Logger\LoggingHandlerInterface;
 
 /**
  * A class for logging to the default php error log.
@@ -85,8 +84,6 @@ class RollbarLoggingHandler implements LoggingHandlerInterface
      * Initialize rollbar object.
      */
     protected function init() {
-        $environment = $this->config->get('environment');
-
         if (empty($this->token) || empty($this->environment)) {
             return FALSE;
         }
@@ -122,15 +119,17 @@ class RollbarLoggingHandler implements LoggingHandlerInterface
      */
     public function log(int $level, string $string): void
     {
+        $levelName = self::$levelMap[$level] ?? sprintf('UNKNOWN%d', $level);
         if (!$this->init()) {
             return;
         }
 
-        $formats = ['%process'];
-        $replacements = [$this->processname];
+        $formats = ['%process', '%level'];
+        $replacements = [$this->processname, strtoupper($levelName)];
         $string = str_replace($formats, $replacements, $string);
+        $string = preg_replace('/^%date(\{[^\}]+\})?\s*/', '', $string);
         $string = trim($string);
 
-        Rollbar::log(self::$levelMap[$level] ?? sprintf('UNKNOWN%d', $level), $string);
+        Rollbar::log($levelName, $string);
     }
 }
