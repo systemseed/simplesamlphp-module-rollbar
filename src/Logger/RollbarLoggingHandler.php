@@ -15,13 +15,12 @@ use SimpleSAML\Logger\LoggingHandlerInterface;
  */
 class RollbarLoggingHandler implements LoggingHandlerInterface
 {
-
     /**
      * Checks if the Rollbar is initialized.
      *
      * @var bool
      */
-    private $isInitialized = FALSE;
+    private $isInitialized = false;
 
     /**
      * This array contains the mappings from syslog log level to names.
@@ -83,9 +82,10 @@ class RollbarLoggingHandler implements LoggingHandlerInterface
     /**
      * Initialize rollbar object.
      */
-    protected function init() {
+    protected function init()
+    {
         if (empty($this->token) || empty($this->environment)) {
-            return FALSE;
+            return false;
         }
 
         if (!$this->isInitialized) {
@@ -93,10 +93,10 @@ class RollbarLoggingHandler implements LoggingHandlerInterface
                 'access_token' => $this->token,
                 'environment' => $this->environment,
             ]);
-            $this->isInitialized = TRUE;
+            $this->isInitialized = true;
         }
 
-        return TRUE;
+        return true;
     }
 
 
