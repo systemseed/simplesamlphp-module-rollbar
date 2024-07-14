@@ -1,8 +1,15 @@
-<?xml version="1.0"?>
-<ruleset name="rollbar">
-    <description>The coding standard for rollbar.</description>
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="phpcs-standard">
+  <description>Drupal based codestyle ruleset</description>
 
-    <rule ref="PSR12" />
-    <file>./src</file>
-    <file>./public</file>
+  <!-- Specify standards. -->
+  <rule ref="Drupal"/>
+  <rule ref="DrupalPractice"/>
+
+  <!-- Include path with the Drupal and DrupalPractice rules. -->
+  <config name="installed_paths" value="vendor/drupal/coder/coder_sniffer"/>
+
+  <!-- Specify folders. -->
+  <file>./hooks</file>
+  <file>./src</file>
 </ruleset>
