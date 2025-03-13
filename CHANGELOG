@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [unreleased]
 -
 
+## [v1.0.2]
+- Allow messages to be ignored.
+
 ## [v1.0.1]
 - Add exception handling as an alternative to logger.
 

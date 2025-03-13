@@ -59,6 +59,13 @@ class RollbarLoggingHandler implements LoggingHandlerInterface {
   private string $environment;
 
   /**
+   * A list of ignored messages.
+   *
+   * @var string
+   */
+  private string $ignoredMessages;
+
+  /**
    * ErrorLogLoggingHandler constructor.
    *
    * @param \SimpleSAML\Configuration $config
@@ -75,6 +82,7 @@ class RollbarLoggingHandler implements LoggingHandlerInterface {
     // Rollbar related configs.
     $this->token = $config->getOptionalString('rollbar.token', '');
     $this->environment = $config->getOptionalString('rollbar.environment', '');
+    $this->ignoredMessages = $config->getOptionalString('rollbar.ignored_messages', []);
   }
 
   /**
@@ -118,6 +126,12 @@ class RollbarLoggingHandler implements LoggingHandlerInterface {
     $levelName = self::$levelMap[$level] ?? sprintf('UNKNOWN%d', $level);
     if (!$this->init()) {
       return;
+    }
+
+    foreach ($this->ignoredMessages as $ignored_message) {
+      if (str_contains($ignored_message, $string)) {
+        return;
+      }
     }
 
     $formats = ['%process', '%level'];

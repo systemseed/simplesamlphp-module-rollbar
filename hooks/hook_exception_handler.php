@@ -26,8 +26,16 @@ function rollbar_hook_exception_handler(Throwable $exception): void {
   $enabled = $config->getOptionalBoolean('rollbar.exception_handler', FALSE);
   $token = $config->getOptionalString('rollbar.token', '');
   $environment = $config->getOptionalString('rollbar.environment', '');
+  $ignored_messages = $config->getOptionalArray('rollbar.ignored_messages', []);
 
   if ($enabled && $token && $environment) {
+    // Ignore messages.
+    foreach ($ignored_messages as $ignored_message) {
+      if (str_contains($exception->getMessage(), $ignored_message)) {
+        return;
+      }
+    }
+
     // Initialize and configure the logger.
     Rollbar::init([
       'access_token' => $token,
